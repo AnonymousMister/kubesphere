@@ -34,20 +34,18 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build and push docker images
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        if: github.event_name == 'push'
-        run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          REPO=kubespheredev TAG="${GITHUB_REF#refs/*/}" make container-cross-push
-    
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}    
       - name: Build and push docker images
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        uses: docker/login-action@v1
+        with:
+          registry: registry.cn-hangzhou.aliyuncs.com
+          username: ${{ secrets.DOCKER_AIL_USERNAME }}
+          password: ${{ secrets.DOCKER_AIL_PASSWORD }}
         if: github.event_name == 'push'
         run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-          REPO=kubespheredev TAG="${GITHUB_REF#refs/*/}" make container-cross-push
+          REPO=wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
+          REPO=registry.cn-hangzhou.aliyuncs.com/wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
       
