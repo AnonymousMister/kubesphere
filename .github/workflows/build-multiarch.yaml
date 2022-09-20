@@ -47,6 +47,6 @@ jobs:
       - name: 打包推送
         if: github.event_name == 'push'
         run: |
-          REPO=wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
-          REPO=registry.cn-hangzhou.aliyuncs.com/wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
+          REPO=wumingq TAG="v3.3.0" make container-cross-push
+          REPO=registry.cn-hangzhou.aliyuncs.com/wumingq TAG="v3.3.0" make container-cross-push
       
