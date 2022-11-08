@@ -1,17 +1,10 @@
-name: BuildContainerImage
+name: BuildContainerImageByTags
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - 'master'
-      - 'release-*'
     tags:
       - 'v*'
-  pull_request:
-    branches:
-      - 'master'
-      - 'release-*'
 
 jobs:
   build:
@@ -47,6 +40,6 @@ jobs:
       - name: 打包推送
         if: github.event_name == 'push'
         run: |
-          REPO=wumingq TAG="v3.3.0" make container-cross-push
-          REPO=registry.cn-hangzhou.aliyuncs.com/wumingq TAG="v3.3.0" make container-cross-push
+          REPO=wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
+          REPO=registry.cn-hangzhou.aliyuncs.com/wumingq TAG="${GITHUB_REF#refs/*/}" make container-cross-push
       
