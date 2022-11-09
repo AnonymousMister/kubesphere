@@ -23,17 +23,29 @@ fi
 # supported platforms
 PLATFORMS=linux/amd64,linux/arm64
 
+oldIFS=$IFS
+#自定义分隔符
+IFS=,
+APISERVER=""
+CONTROLLER=""
+for item in $REPO;
+do
+  APISERVER="$APISERVER -t $item/ks-apiserver:$TAG "
+  CONTROLLER="$CONTROLLER -t $item/ks-controller-manager:$TAG "
+done
+IFS=$oldIFS
+
 # shellcheck disable=SC2086 # inteneded splitting of CONTAINER_BUILDER
 ${CONTAINER_CLI} ${CONTAINER_BUILDER} \
   --platform ${PLATFORMS} \
   ${PUSH} \
   -f build/ks-apiserver/Dockerfile \
-  -t "${REPO}"/ks-apiserver:"${TAG}" .
+  ${APISERVER} .
 
 # shellcheck disable=SC2086 # intended splitting of CONTAINER_BUILDER
 ${CONTAINER_CLI} ${CONTAINER_BUILDER} \
   --platform ${PLATFORMS} \
   ${PUSH} \
   -f build/ks-controller-manager/Dockerfile \
-  -t "${REPO}"/ks-controller-manager:"${TAG}" .
+  ${CONTROLLER} .
 
